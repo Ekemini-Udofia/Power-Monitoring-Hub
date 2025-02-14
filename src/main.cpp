@@ -7,7 +7,7 @@
 RH_ASK driver(Rf_PIN);
 
 const char* ssid = "ekeminiudofia";
-const char* password = "ekeminietuk";
+const char* password = "ekeminietuk"; 
 const char* hostname = "Home Server";
 
 bool has_internet()
