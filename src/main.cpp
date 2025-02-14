@@ -17,7 +17,6 @@ void setup() {
         Serial.println("Failed to initialize driver");
     }
 
-    // Connect to Wi-Fi
     WiFi.begin(ssid, password);
     while (WiFi.status() != WL_CONNECTED && millis() < 10000) {
         delay(1000);
@@ -25,7 +24,6 @@ void setup() {
     }
     Serial.println("Connected to WiFi");
 
-    // Set up web server
     server.on("/", HTTP_GET, [](AsyncWebServerRequest *request) {
         request->send(200, "text/html", "<html><body><h1>Data: " + receivedData + "</h1></body></html>");
     });
