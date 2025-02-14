@@ -1,6 +1,4 @@
 #include <Arduino.h>
-#include <SPI.h>
-#include <ESPAsyncWebServer.h>
 #include <WiFi.h>
 #include <RH_ASK.h>
 #include <Callmebot_ESP32.h>
@@ -27,27 +25,27 @@ bool has_internet()
     }
 }
 
-void setup() 
+void WiFiConnect()
 {
-    Serial.begin(115200);
+    WiFi.mode(WIFI_STA);
     WiFi.begin(ssid, password);
     WiFi.setHostname(hostname);
-    Serial.println("Connecting to WiFi");
-
-    while (WiFi.status() != WL_CONNECTED && millis() < 5000) {
+    while (WiFi.status() != WL_CONNECTED) 
+    {
         delay(1000);
-        Serial.println("Connecting...");
+        Serial.println("Connecting to WiFi..");
     }
     Serial.println("Connected to WiFi");
     Serial.println(WiFi.localIP());
-    if(has_internet())
-    {
-        Serial.println("Internet Connection Available");
-    }
-    else
-    {
-        Serial.println("Internet Connection Unavailable");
-    }
+}
+
+
+void setup() 
+{
+    Serial.begin(115200);
+    Serial.println("Connecting to WiFi");
+    WiFiConnect();
+
     if(!driver.init())
     {
         Serial.println("Failed to initialise RF Module");
@@ -55,6 +53,15 @@ void setup()
     else
     {
         Serial.println("RF Module Initialised");
+    }
+    if(has_internet())
+    {
+        Serial.println("Internet Connection Available");
+    }
+    else
+    {
+        Serial.println("Internet Connection Unavailable");
+        WiFiConnect();
     }
 
 
