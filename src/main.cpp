@@ -1,3 +1,18 @@
+/*Power Monitoring Hub project
+
+    Description: 
+        This is the code for the power monitoring system. 
+        The device/system uses a relay to know when power(NEPA) in the house is active.
+        
+        It (should have) a feature to display that data of power downtime and uptime on 
+        a webpage hosted both locally and on the web, to enable one see it from anywhere
+        in the world
+        
+*/
+
+
+
+
 #include <Arduino.h>
 #include <WiFi.h>
 #include <RH_ASK.h>
