@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Device Setup</title>
+  <style>
+    body {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    font-family: Arial, sans-serif;
+    background: #f4f4f4;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    }
+
+    .container {
+    background: #fff;
+    padding: 20px 30px;
+    border-radius: 12px;
+    box-shadow: 0 0 15px rgba(0,0,0,0.1);
+    width: 90%;
+    max-width: 400px;
+    box-sizing: border-box;
+    text-align: left;
+    }
+
+
+    h2 {
+      text-align: center;
+      color: #333;
+    }
+    label {
+      display: block;
+      margin: 12px 0 4px;
+      font-weight: bold;
+    }
+    input[type="text"],
+    input[type="password"] {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid #aaa;
+      border-radius: 8px;
+      font-size: 1em;
+    }
+    button {
+      margin-top: 20px;
+      width: 100%;
+      padding: 12px;
+      background: #2d89ef;
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      font-size: 1em;
+      cursor: pointer;
+    }
+    button:hover {
+      background: #1b5fbf;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>Configure Device</h2>
+    <form action="/submit" method="POST">
+      <label for="ssid">Wi-Fi SSID:</label>
+      <input type="text" id="ssid" name="ssid" required />
+
+      <label for="password">Wi-Fi Password:</label>
+      <input type="password" id="password" name="password" required />
+
+      <label for="device">Device Name:</label>
+      <input type="text" id="device" name="device" />
+
+      <button type="submit">Save & Connect</button>
+    </form>
+  </div>
+</body>
+</html>

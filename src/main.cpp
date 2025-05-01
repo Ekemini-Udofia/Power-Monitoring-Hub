@@ -7,7 +7,25 @@
         It (should have) a feature to display that data of power downtime and uptime on 
         a webpage hosted both locally and on the web, to enable one see it from anywhere
         in the world
-        
+
+    How it works:
+        Detect Power Supply
+        Use a GPIO pin to detect mains power presence (via optocoupler or relay module).
+
+        Debounce & Timestamp
+        On state change (light on/off), debounce and log with millis() or NTP-based timestamp.
+
+        Store Events
+        Save logs in RAM or LittleFS (e.g., JSON array of timestamps and states).
+
+        Serve Web Page
+        Set up ESP32 web server to serve a live dashboard (HTML/JS) showing logs/status.
+
+        Live Updates (Optional)
+        Use WebSockets or AJAX polling to push real-time status to the browser.
+
+        Predictive API Hook (Optional)
+        Periodically send logs to Gemini API (or similar) and display predictions on the page.
 */
 
 
@@ -15,11 +33,9 @@
 
 #include <Arduino.h>
 #include <WiFi.h>
-#include <RH_ASK.h>
-#include <Callmebot_ESP32.h>
 
-#define Rf_PIN 27
-RH_ASK driver(Rf_PIN);
+#define power_detector_pin 27
+
 
 const char* ssid = "ekeminiudofia";
 const char* password = "ekeminietuk"; 
