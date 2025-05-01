@@ -1,8 +1,8 @@
-# ESP32 Home Automation Data Server
+# ESP32 Power Monitoring Hub
 
 ## Overview
 
-This project sets up an **ESP32-based home automation server** that collects sensor data from multiple devices via a **433MHz RF receiver** and sends it to a remote website (**ekemini.com**) over WiFi.
+This project sets up an **ESP32-based Power Monitoring Hub** that collects sensor data from multiple devices via a **433MHz RF receiver** and sends it to a remote website over WiFi.
 
 ## Features
 
