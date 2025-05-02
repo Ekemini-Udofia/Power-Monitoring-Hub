@@ -1,81 +1,142 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Device Setup</title>
-  <style>
-    body {
-    margin: 0;
-    padding: 0;
-    height: 100%;
-    font-family: Arial, sans-serif;
-    background: #f4f4f4;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    }
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Configure Device</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+            body {
+            margin: 0;
+            font-family: 'Poppins', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            transition: background 0.3s, color 0.3s;
+            background: var(--bg-color, linear-gradient(135deg, #f0f4f8, #d9e2ec));
+            color: var(--text-color, #333);
+        }
 
-    .container {
-    background: #fff;
-    padding: 20px 30px;
-    border-radius: 12px;
-    box-shadow: 0 0 15px rgba(0,0,0,0.1);
-    width: 90%;
-    max-width: 400px;
-    box-sizing: border-box;
-    text-align: left;
-    }
+        .card {
+            background: var(--card-bg, #ffffff);
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 400px;
+            position: relative;
+        }
 
+        h2 {
+            text-align: center;
+            margin-bottom: 1.5rem;
+            color: inherit;
+        }
 
-    h2 {
-      text-align: center;
-      color: #333;
-    }
-    label {
-      display: block;
-      margin: 12px 0 4px;
-      font-weight: bold;
-    }
-    input[type="text"],
-    input[type="password"] {
-      width: 100%;
-      padding: 10px;
-      border: 1px solid #aaa;
-      border-radius: 8px;
-      font-size: 1em;
-    }
-    button {
-      margin-top: 20px;
-      width: 100%;
-      padding: 12px;
-      background: #2d89ef;
-      color: #fff;
-      border: none;
-      border-radius: 8px;
-      font-size: 1em;
-      cursor: pointer;
-    }
-    button:hover {
-      background: #1b5fbf;
-    }
-  </style>
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+        }
+
+        input {
+            width: 90%;
+            padding: 0.75rem 1rem;
+            margin-bottom: 1.2rem;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: border-color 0.3s;
+            background: var(--input-bg, #fff);
+            color: inherit;
+        }
+
+        input:focus {
+            border-color: #007bff;
+            outline: none;
+        }
+
+        .btn {
+            width: 100%;
+            padding: 0.75rem;
+            background: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .btn:hover {
+            background: #0056b3;
+        }
+
+        .theme-toggle {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            font-size: 1.5rem;
+            cursor: pointer;
+            user-select: none;
+        }
+
+        /* Dark mode variables */
+        body.dark-mode {
+            --bg-color: linear-gradient(135deg, #121212, #1e1e1e);
+            --card-bg: #2c2c2c;
+            --text-color: #f0f0f0;
+            --input-bg: #3a3a3a;
+        }
+
+        @media (max-width: 480px) {
+            .card {
+                padding: 1.5rem;
+            }
+        }
+    </style>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const themeToggle = document.getElementById('themeToggle');
+            const body = document.body;
+    
+            if (localStorage.getItem('theme') === 'dark') {
+                body.classList.add('dark-mode');
+                themeToggle.textContent = '☀️';
+            }
+    
+            themeToggle.addEventListener('click', () => {
+                body.classList.toggle('dark-mode');
+                const isDark = body.classList.contains('dark-mode');
+                themeToggle.textContent = isDark ? '☀️' : '🌙';
+                localStorage.setItem('theme', isDark ? 'dark' : 'light');
+            });
+        });
+    </script>
 </head>
+
 <body>
-  <div class="container">
-    <h2>Configure Device</h2>
-    <form action="/submit" method="POST">
-      <label for="ssid">Wi-Fi SSID:</label>
-      <input type="text" id="ssid" name="ssid" required />
 
-      <label for="password">Wi-Fi Password:</label>
-      <input type="password" id="password" name="password" required />
+    <div class="card">
+        <div class="theme-toggle" id="themeToggle">🌙</div>
+        <h2>Configure Device</h2>
+        <form>
+            <label for="ssid">Wi-Fi SSID</label>
+            <input type="text" id="ssid" name="ssid" placeholder="Enter Wi-Fi SSID" required />
 
-      <label for="device">Device Name:</label>
-      <input type="text" id="device" name="device" />
+            <label for="password">Wi-Fi Password</label>
+            <input type="password" id="password" name="password" placeholder="Enter Wi-Fi Password" required />
 
-      <button type="submit">Save & Connect</button>
-    </form>
-  </div>
+            <label for="deviceName">Device Name (optional)</label>
+            <input type="text" id="deviceName" name="deviceName" placeholder="Enter Device Name" />
+
+            <button class="btn" type="submit">Save & Connect</button>
+        </form>
+    </div>
+    <script src="design.js" defer></script>
 </body>
+
 </html>

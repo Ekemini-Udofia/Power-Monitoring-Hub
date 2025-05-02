@@ -37,6 +37,29 @@
 #define power_detector_pin 27
 
 
+#define RELAY_PIN 2
+
+bool lastState = false;
+
+void setup() {
+  pinMode(RELAY_PIN, INPUT_PULLUP);
+  Serial.begin(9600);
+}
+
+void loop() {
+  bool currentState = digitalRead(RELAY_PIN) == LOW;
+
+  if (currentState && !lastState) {
+    Serial.print("Power ON at: ");
+    Serial.println(millis()); // replace with RTC time for real logs
+  }
+
+  lastState = currentState;
+  delay(500);
+}
+
+
+
 const char* ssid = "ekeminiudofia";
 const char* password = "ekeminietuk"; 
 const char* hostname = "Home Server";
