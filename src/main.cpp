@@ -30,110 +30,60 @@
 
 
 
-
 #include <Arduino.h>
 #include <WiFi.h>
 
-#define power_detector_pin 27
+#define power_detector_pin 1// change this as needed
+#define indicator_led 2 //for the led bulb. Change this when an external indicator bulb has been put 
 
 
-#define RELAY_PIN 2
-
-bool lastState = false;
-
-void setup() {
-  pinMode(RELAY_PIN, INPUT_PULLUP);
-  Serial.begin(9600);
-}
-
-void loop() {
-  bool currentState = digitalRead(RELAY_PIN) == LOW;
-
-  if (currentState && !lastState) {
-    Serial.print("Power ON at: ");
-    Serial.println(millis()); // replace with RTC time for real logs
-  }
-
-  lastState = currentState;
-  delay(500);
-}
+const char* ssid = "Power Hub";
+const char* password = "1234567890";
 
 
 
-const char* ssid = "ekeminiudofia";
-const char* password = "ekeminietuk"; 
-const char* hostname = "Home Server";
-
-bool has_internet()
+void create_network()
 {
-    WiFiClient client;
-    if(client.connect("www.google.com", 80, 2000))
-    {// attempt to connect to google.com
-        client.stop();
-        return true; // if the connection is succesful
-    }
-    else
-    {
-        client.stop();
-        return false; // the connection isnt succesful
-    }
-}
-
-void WiFiConnect()
-{
-    WiFi.mode(WIFI_STA);
-    WiFi.begin(ssid, password);
-    WiFi.setHostname(hostname);
-    while (WiFi.status() != WL_CONNECTED) 
-    {
-        delay(1000);
-        Serial.println("Connecting to WiFi..");
-    }
-    Serial.println("Connected to WiFi");
-    Serial.println(WiFi.localIP());
+    WiFi.softAP(ssid, password);
 }
 
 
-void setup() 
+/*
+void create_web_server()
 {
+    // create a web server to serve the webpage
+    // this can be done using the ESPAsyncWebServer library or the WebServer library
+}
+
+void create_captive_portal()
+{
+    // create captive portal and direct user to captive portal page.
+}
+
+void log_power_data()
+{
+    // log the power state to a file or database
+    // this can be done using LittleFS or SPIFFS for local storage
+}
+
+void connect_to_network()
+{}
+
+*/
+
+void setup()
+{
+    pinMode(power_detector_pin, INPUT);
+    create_network();
     Serial.begin(115200);
-    Serial.println("Connecting to WiFi");
-    WiFiConnect();
-
-    if(!driver.init())
-    {
-        Serial.println("Failed to initialise RF Module");
-    }
-    else
-    {
-        Serial.println("RF Module Initialised");
-    }
-    if(has_internet())
-    {
-        Serial.println("Internet Connection Available");
-    }
-    else
-    {
-        Serial.println("Internet Connection Unavailable");
-        WiFiConnect();
-    }
-
-
+    Serial.println("Power Monitoring Hub started");
+    Serial.println("IP Address: ");
+    Serial.println(WiFi.softAPIP()):
 }
 
-void loop() 
+void loop()
 {
-    uint8_t buffer[RH_ASK_MAX_MESSAGE_LEN];
-    uint8_t length_of_messagefer = sizeof(buffer);
-
-    if(driver.recv(buffer, &length_of_messagefer))
-    {
-        Serial.println("Message Received");
-        Serial.println((char*)buffer);
-        delay(10);
-    }
-    Callmebot.whatsappMessage("+2349134102038", "6289833", String((char*)buffer));
-    Callmebot.whatsappMessage("+2349134102038", "6289833", "Test");
-    Serial.println("Message Sent");
+    int power_state = digitalRead(power_detector_pin);
+    //put code here
 
 }
