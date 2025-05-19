@@ -1,79 +1,84 @@
-# ESP32 Power Monitoring Hub
+# Power Monitoring Hub 🚨⚡
 
-## Overview
+A smart ESP32-based solution to monitor power (NEPA) uptime and downtime in real time. This project detects when mains electricity is active in your house using a GPIO-connected relay or optocoupler and displays status updates on a beautiful live webpage.
 
-This project sets up an **ESP32-based Power Monitoring Hub** that collects sensor data from multiple devices via a **433MHz RF receiver** and sends it to a remote website over WiFi.
+---
 
-## Features
+## 📋 Features
 
-- **433MHz Data Reception**: Receives data from various sensors around the house.
-- **WiFi Connectivity**: Connects to a home WiFi network.
-- **HTTP Data Transmission**: Sends sensor data to a remote server via HTTP POST requests.
-- **Real-time Data Updates**: The website fetches and displays incoming data dynamically.
+- Detects mains power presence through a relay or optocoupler.
+- Hosts a Wi-Fi access point and captive portal for first-time setup.
+- Saves and reconnects to your home Wi-Fi automatically.
+- Logs uptime/downtime events with timestamps.
+- Serves a web dashboard for monitoring power events live.
+- (Optional) Sends logs to a predictive AI (e.g. Gemini API) to forecast future power availability.
 
-## Hardware Requirements
+---
 
-- **ESP32 Dev Module**
-- **433MHz RF Receiver Module (e.g., MX-RM-5V)**
-- **Power Supply (e.g., USB 5V)**
-- **Jumper Wires**
+## 🚀 How It Works
 
-## Software Requirements
+1. **Detect Power Supply**  
+   Uses a GPIO pin to detect if power is ON or OFF via relay/optocoupler.
 
-- **PlatformIO IDE**
-- **Arduino Framework**
-- **ESP32 WiFi and HTTP libraries**
+2. **Debounce & Timestamp**  
+   Filters out false triggers and logs accurate time of state changes using `millis()` or NTP.
 
-## Setup Instructions
+3. **Store Events**  
+   Logs events into memory or LittleFS in a JSON array format.
 
-### 1. Connect ESP32 to WiFi
+4. **Web Dashboard**  
+   A local web server hosts a live dashboard showing power status and history.
 
-- Configure WiFi SSID and password in the firmware.
-- Ensure ESP32 connects to the internet successfully.
+5. **Optional: Real-time Updates**  
+   Uses WebSockets or AJAX polling to show live status on the browser.
 
-### 2. Connect the 433MHz Receiver
+6. **Optional: AI Forecasting**  
+   Sends historical logs to AI API (like Gemini) to predict next power changes.
 
-- Wire the receiver's **Data** pin to an ESP32 GPIO.
-- Power the module using ESP32's **3.3V or 5V** pin.
-- Use an appropriate library to decode RF signals.
+---
 
-### 3. Process and Format Sensor Data
+## 📱 Captive Portal Setup
 
-- Capture signals from the **433MHz receiver**.
-- Extract sensor values and format them as JSON.
+- When no known Wi-Fi is found, the ESP32 starts a captive portal (`Power Hub`) at IP `192.168.4.1`.
+- Users can select a network and enter a password via a sleek web UI.
+- On submission, it saves credentials and connects to the specified network.
 
-### 4. Send Data to the Remote Server
+---
 
-- Set up an HTTP POST request to website to display the data
-- Include sensor data in the request body.
-- Handle potential failures (e.g., Wi-Fi disconnection, server errors).
+## 🧰 Dependencies
 
-### 5. Display Data on Website
+Make sure to install the following libraries:
 
-- Ensure the website receives and stores incoming data.
-- Use JavaScript to dynamically update the UI with new sensor readings.
+- `ESPAsyncWebServer`
+- `AsyncTCP`
+- `DNSServer`
+- `WiFi`
+- `Preferences`
 
-## Code Structure
+Install via PlatformIO or Arduino Library Manager.
 
-```
-/esp32-home-server
-|-- src/
-|   |-- main.cpp   # ESP32 firmware (WiFi, RF Receiver, HTTP Client)
-|-- include/
-|-- platformio.ini # PlatformIO configuration
-|-- README.md      # Project documentation
-```
+---
 
-## Future Improvements
+## 🛠️ Pin Configuration
 
-- Add **security features** like API authentication.
-- Support **multiple sensor types** beyond RF-based ones.
+| Name                 | Pin | Description                     |
+|----------------------|-----|---------------------------------|
+| `power_detector_pin` | 1   | Connect to relay/optocoupler    |
+| `indicator_led`      | 2   | Optional LED indicator output   |
 
-## License
+---
 
-This project is open-source under the MIT License.
+## 🧪 To-Do
 
-## Author
+- [ ] Add LittleFS or SPIFFS logging.
+- [ ] Build the full logging + NTP timestamp feature.
+- [ ] Create the full web dashboard with historical logs.
+- [ ] Integrate predictive API hook to Gemini.
 
-**Ekemini Udofia** –  Https://linktr.ee/ekeminieudofia
+---
 
+## 💡 Credits
+
+Built with ❤️ by an embedded systems engineer passionate about making Nigerian homes smarter.
+
+---
