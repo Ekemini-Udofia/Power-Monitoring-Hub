@@ -35,13 +35,14 @@
 #include <DNSServer.h>
 #include <AsyncTCP.h>
 #include <ESPAsyncWebServer.h> 
+#include <preferences.h>
 
 #define power_detector_pin 1// change this as needed
 #define indicator_led 2 //for the led bulb. Change this when an external indicator bulb has been put 
 
 
-const char* ssid = "Power Hub";
-const char* password = "1234567890";
+const char* default_ssid = "Power Hub";
+const char* default_password = "1234567890";
 
 DNSServer default_server;
 AsyncWebServer server(80);
@@ -767,7 +768,7 @@ void setup()
     Serial.begin(115200);
     Serial.println("Power Monitoring Hub started");
     WiFi.mode(WIFI_AP_STA);
-    WiFi.softAP(ssid, password);
+    WiFi.softAP(default_ssid, default_password);
     Serial.println("AP IP Address: " + WiFi.softAPIP().toString());
     Serial.println("Starting Async Web server");
     create_web_server();
