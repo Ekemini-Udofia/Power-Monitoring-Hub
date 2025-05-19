@@ -79,6 +79,7 @@ Install via PlatformIO or Arduino Library Manager.
 
 ## 💡 Credits
 
-Ekemini Udofia - linktr.ee/ekeminieudofia
+Ekemini Udofia - [Linktree](linktr.ee/ekeminieudofia)
+
 
 ---
