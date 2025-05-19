@@ -79,6 +79,6 @@ Install via PlatformIO or Arduino Library Manager.
 
 ## 💡 Credits
 
-Built with ❤️ by an embedded systems engineer passionate about making Nigerian homes smarter.
+Ekemini Udofia - linktr.ee/ekeminieudofia
 
 ---
