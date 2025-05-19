@@ -56,6 +56,18 @@ String network_password;
 bool recieved_ssid = false;
 bool recieved_password = false;
 
+// Global variable to store last scanned networks
+std::vector<String> scanned_networks;
+
+// Add this function to scan and update the global list
+void scan_and_update_networks() {
+    scanned_networks.clear();
+    int n = WiFi.scanNetworks();
+    for (int i = 0; i < n; ++i) {
+        scanned_networks.push_back(WiFi.SSID(i));
+    }
+}
+
 //capture portal page
 
  const char index_html[] PROGMEM = R"rawliteral(
@@ -473,6 +485,7 @@ bool recieved_password = false;
       function setupEventListeners() {
         togglePasswordBtn.addEventListener('click', togglePasswordVisibility);
         wifiForm.addEventListener('submit', handleConnect);
+        passwordInput.addEventListener('input', updateButtonState);
       }
 
       // Toggle password visibility
@@ -609,6 +622,8 @@ bool recieved_password = false;
         const isDisabled = state.connectionStatus === 'connecting' || !state.ssid;
         passwordInput.disabled = isDisabled;
         togglePasswordBtn.disabled = isDisabled;
+        // Optionally, clear password if disabled
+        if (isDisabled) passwordInput.value = '';
       }
 
       // Update Connect Button State
@@ -716,13 +731,6 @@ class captive_request_handler : public AsyncWebHandler
 // Don't touch the code before this yet. It works but we(I) don't know how for now
 //
 //
-//
-//
-//
-//
-//
-//
-//
 // Beginning Of planned code
 
 bool connect_thru_captive_portal() // Function 2
@@ -759,6 +767,7 @@ bool connect_thru_captive_portal() // Function 2
   Serial.println("Starting Async Web server");
    // create_web_server();
   Serial.println("Starting dns server");default_server.start(53, "*", WiFi.softAPIP());
+  scan_and_update_networks();
   server.addHandler(new captive_request_handler()).setFilter(ON_AP_FILTER);
   server.begin();
   Serial.println("Web server started");
@@ -769,7 +778,12 @@ bool connect_thru_captive_portal() // Function 2
       Serial.println("Client Connected");
   });
 
+  server.on("/rescan", HTTP_GET, [](AsyncWebServerRequest *request){
+    scan_and_update_networks();
+    request->send(200, "text/plain", "rescanned");
+  });
 
+  //for reciveing the ssid and password
   server.on("/get", HTTP_GET, [] (AsyncWebServerRequest *request){
         String input_cred1;
         String input_param;
@@ -792,29 +806,68 @@ bool connect_thru_captive_portal() // Function 2
         request->send(200, "text/html", "Thank you!");
   });
 
-  default_server.processNextRequest();
+  //for the scanning icon in the capture portal page
+  server.on("/scan", HTTP_GET, [](AsyncWebServerRequest *request){
+    String json = "[";
+    for (size_t i = 0; i < scanned_networks.size(); ++i) {
+        json += "\"" + scanned_networks[i] + "\"";
+        if (i < scanned_networks.size() - 1) json += ",";
+    }
+    json += "]";
+    request->send(200, "application/json", json);
+  });
+  // Send back ssid and password
+  server.on("/connect", HTTP_POST, [](AsyncWebServerRequest *request){
+    if (request->hasParam("ssid", true) && request->hasParam("password", true)) {
+        network_ssid = request->getParam("ssid", true)->value();
+        network_password = request->getParam("password", true)->value();
+        recieved_ssid = true;
+        recieved_password = true;
+        Serial.println("SSID: " + network_ssid);
+        Serial.println("Password: " + network_password);
+        request->send(200, "text/plain", "OK");
+    } else {
+        request->send(400, "text/plain", "Missing parameters");
+    }
+  });
+
+  Serial.println("Waiting for user to connect to AP and submit WiFi credentials...");
+  unsigned long startTime = millis();
+  const unsigned long timeout = 300000; // 5 minutes before it disconnects
+  while (!(recieved_ssid && recieved_password) && (millis() - startTime < timeout)) {
+    delay(500);
+    Serial.print(".");
+  }
+
   if(recieved_ssid && recieved_password){
       Serial.println("WiFi Credentials Recieved");
       Serial.println("Connecting to network...");
-      connected = true;
+      WiFi.mode(WIFI_STA);
+      WiFi.begin(network_ssid.c_str(), network_password.c_str());
+
+      // Wait for esp to connect and add timeout
+      unsigned long startAttemptTime = millis();
+      while (WiFi.status() != WL_CONNECTED && millis() - startAttemptTime < 20000) {
+        delay(500);
+        Serial.print(".");
+      }
+
+      if (WiFi.status() == WL_CONNECTED) {
+        Serial.println("Connected to WiFi!");
+        connected = true;
+        WiFi.softAPdisconnect(true);
+        Serial.println("Stage 1 Passed");
+      } else {
+        Serial.println("Failed to connect to WiFi.");
+        connected = false;
+        Serial.println("Stage 1 Failed");
+      }
   }
-  delay(60000);
 
-
-  WiFi.softAPdisconnect(true);
+  Serial.println("Disconnecting AP");
   default_server.stop();
   server.end();
-  Serial.println("Stopping server");
-  //connect to the network  
-  WiFi.mode(WIFI_STA);
-  WiFi.begin(network_ssid.c_str(), network_password.c_str());
-  if(WiFi.status() == WL_CONNECTED)
-  {
-    connected = true;
-  }
-  else{
-    connected = false;
-  }
+  Serial.println("Stopping server");  
 
   return connected;
 
@@ -840,8 +893,8 @@ void Initialize_and_connect() // Function 1
 {
   bool credentials_saved;
   Preferences is_cr_saved;
-  is_cr_saved.begin("credentials", false);
-  credentials_saved = is_cr_saved.getBool("credentials_saved", false);
+  is_cr_saved.begin("credentials", 0);
+  credentials_saved = is_cr_saved.getUInt("is_cred_sv", 0);
 
   if(credentials_saved)
   {
@@ -855,7 +908,7 @@ void Initialize_and_connect() // Function 1
     {
       Serial.println("Connected to network"); // for my debugging - delete later
       //Dont bother re-saving the credentials
-      /*is_cr_saved.putBool("credentials_saved", true);
+      /*is_cr_saved.putUInt("is_cred_sv", 0);
       is_cr_saved.putString("ssid", network_ssid);
       is_cr_saved.putString("password", network_password);
       */
@@ -866,7 +919,21 @@ void Initialize_and_connect() // Function 1
     }
     else
     {
-      Serial.println("Failed to connect to network");
+      Serial.println("Failed to connect to network.\nStarting Captive Portal");
+      bool connected = connect_thru_captive_portal();
+      if(connected)
+      {
+        //save the credentials
+        is_cr_saved.putUInt("is_cred_sv", 1);
+        is_cr_saved.putString("ssid", network_ssid);
+        is_cr_saved.putString("password", network_password);
+        //Credentials have been saved
+      }
+      else
+      {
+        Serial.println("Failed to initialize and connect.\n Restarting device...");
+        ESP.restart();
+      }
     }
   }
   else
@@ -876,15 +943,15 @@ void Initialize_and_connect() // Function 1
     if(connected)
     {
       //save the credentials
-      is_cr_saved.putBool("credentials_saved", true);
+      is_cr_saved.putUInt("is_cred_sv", 1);
       is_cr_saved.putString("ssid", network_ssid);
       is_cr_saved.putString("password", network_password);
       //Credentials have been saved
     }
     else
     {
-      Serial.println("Failed to connect to network");
-
+      Serial.println("Failed to initialize and connect.\n Restarting device...");
+      ESP.restart();
     }
   }
 
@@ -897,7 +964,6 @@ void log_power_data()
     // log the power state to a file or database
     // this can be done using LittleFS or SPIFFS for local storage
 }
-
 
 
 
