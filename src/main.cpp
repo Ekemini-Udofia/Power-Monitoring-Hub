@@ -50,7 +50,7 @@ void flash_nvs() // call this when the nvs flash is full
 
 bool is_power = false; // No nepa ny deault
 
-void log_power_data(power_details& details)
+void save_log(power_details& details)
 {
   // put detail->time inside preferences?
   // get struct power details and move it to sd card? or just save it in preferences
@@ -58,13 +58,15 @@ void log_power_data(power_details& details)
     // this can be done using LittleFS or SPIFFS for local storage
 }
 
-const char* get_time()
-{
-  unsigned long uptime = (millis() *  1000);  
-  long current_time;
-  current_time = internet_time();
-  // Implement getting the exact time with millis() here
-  return ;
+time_t log_time_data() {
+    time_t now = time(nullptr);
+    struct tm* timeinfo = localtime(&now);
+    char buffer[64];
+    strftime(buffer, sizeof(buffer), "%Y-%m-%d %H:%M:%S", timeinfo);
+    Serial.printf("State changed at: %s\n", buffer);
+    time_t power_time = buffer[64];
+    return power_time;
+
 }
 
 void IRAM_ATTR set_power_state()
@@ -74,13 +76,12 @@ void IRAM_ATTR set_power_state()
   // add logic to stamp the time and then move that time
   if(is_power){
     details.state = "NEPA On";
-    details.time = get_time();
+    details.time = log_time_data();
   }else{
     details.state = "NEPA Off";
-    details.time = get_time();
+    details.time = log_time_data();
   }
-
-  
+  save_log(details);  
 }
 
 
@@ -89,19 +90,27 @@ void IRAM_ATTR set_power_state()
 
 void setup()
 {
-    pinMode(relay_pin, INPUT_PULLUP);
-    attachInterrupt(digitalPinToInterrupt(relay_pin), set_power_state, CHANGE);
-    Serial.begin(115200);
-    Serial.println("Power Monitoring Hub started");
-    
+  // Initializations
+  pinMode(relay_pin, INPUT_PULLUP);
+  attachInterrupt(digitalPinToInterrupt(relay_pin), set_power_state, CHANGE);
+  Serial.begin(115200);
 
-    Initialize_and_connect();
+  Serial.println("Power Monitoring Hub started");
+
+  Initialize_and_connect();
+  
+  // Check if theres nepa then enter eep sleep mode
+  if (digitalRead(relay_pin) == LOW) {
+    Serial.println("No power. Sleeping...");
+    delay(2000);
+    esp_sleep_enable_ext0_wakeup(GPIO_NUM_1, 1);
+    esp_deep_sleep_start();
+  }
     // WiFi.softAP(default_ssid, default_password);
 
 }
 
 void loop()
 {
-    //int power_state = digitalRead(power_detector_pin);
     
 }
