@@ -39,7 +39,7 @@
 // #include <Arduino_FreeRTOS.h>
 
 // My personally defined headers
-#include "capt_portal.h"
+#include "capt_portal.hpp"
 
 // Define the GPIO pins on the ESP32 different functions
 #ifndef hdw_pins
