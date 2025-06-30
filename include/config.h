@@ -9,6 +9,7 @@ const char* default_password = "1234567890";
 
 struct power_details{
   const char* time;
+  const char* state;
 };
 
 #endif
