@@ -6,15 +6,15 @@
 
 
 bool is_internet = is_internet_connected();
-long internet_time()
-{
-    if(is_internet_connected())
+
+void sync_time() {
+    if(is_internet)
     {
         configTime(0, 0, "pool.ntp.org");
-        struct tm timeinfo;
-        return getLocalTime(&timeinfo);
-    } else{
-        return NULL;
+        while (time(nullptr) < 100000) {
+            delay(100);
+        }
+        Serial.println("Time synced!");
     }
 }
 
