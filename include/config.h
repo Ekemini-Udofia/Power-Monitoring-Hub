@@ -10,7 +10,7 @@ const char* default_ssid = "Power Hub";
 const char* default_password = "1234567890";
 
 struct power_details{
-  const char* time;
+  time_t time;
   const char* state;
 };
 
