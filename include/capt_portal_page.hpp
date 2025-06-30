@@ -1,4 +1,5 @@
-#pragma once
+#ifndef capt_port_page
+#define capt_port_page
 
 //capture portal page
 
@@ -644,3 +645,5 @@ const char index_html[] PROGMEM = R"rawliteral(
   </body>
   </html>
 )rawliteral";
+
+#endif

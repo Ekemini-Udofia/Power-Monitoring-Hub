@@ -57,9 +57,9 @@ void log_power_data(power_details& details)
     // this can be done using LittleFS or SPIFFS for local storage
 }
 
-String get_time()
+const char* get_time()
 {
-  String current_time;
+  const char* current_time;
   // Implement getting the exact time with millis() here
   return current_time;
 }
@@ -69,11 +69,14 @@ void IRAM_ATTR set_power_state()
   power_details details;
   is_power = ~is_power & 1; // change it to its Opposite state
   // add logic to stamp the time and then move that time
-  if(is_power)
-  {
-    details->state = "Light";
-    details->time = get_time();
+  if(is_power){
+    details.state = "NEPA On";
+    details.time = get_time();
+  }else{
+    details.state = "NEPA Off";
+    details.time = get_time();
   }
+
   
 }
 

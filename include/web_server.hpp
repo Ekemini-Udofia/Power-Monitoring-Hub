@@ -1,8 +1,5 @@
-#pragma once
-
 #ifndef web_server
 #define web_server
-#endif
 
 #include <WiFi.h>
 #include <DNSServer.h>
@@ -189,3 +186,4 @@ bool connect_thru_captive_portal() // Function 2
   return connected;
 
 }
+#endif

@@ -1,4 +1,6 @@
-#ifndef hdw_pins
+#ifndef config_file
+#define config_file
+
 #define relay_pin 14
 #define indicator_led 2 
 #define config_touch_0 4  

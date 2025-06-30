@@ -1,4 +1,6 @@
-#pragma once 
+#ifndef cpt_port_connect
+#define cpt_port_connect
+
 // Inbuilt libs
 #include <preferences.h>
 
@@ -89,3 +91,5 @@ void Initialize_and_connect() // Function 1
 
 
 }
+
+#endif
