@@ -42,12 +42,17 @@
 #include "capt_portal.hpp"
 
 // Define the GPIO pins on the ESP32 different functions
+// This might be moved to a header file
 #ifndef hdw_pins
-#define power_detector_pin 1
+#define relay_pin 14
 #define indicator_led 2 
+#define config_touch_0 4  
 #endif
 
-
+bool is_power = false;
+struct power_details{
+  const char* time;
+};
 
 const char* default_ssid = "Power Hub";
 const char* default_password = "1234567890";
@@ -323,8 +328,15 @@ void Initialize_and_connect() // Function 1
 
 void log_power_data()
 {
+  // get struct power details and move it to sd card? or just save it in preferences
     // log the power state to a file or database
     // this can be done using LittleFS or SPIFFS for local storage
+}
+
+void IRAM_ATTR set_power_state()
+{
+  is_power = true;
+  
 }
 
 
@@ -333,7 +345,8 @@ void log_power_data()
 
 void setup()
 {
-    // pinMode(power_detector_pin, INPUT);
+    pinMode(relay_pin, INPUT_PULLUP);
+    attachInterrupt(digitalPinToInterrupt(relay_pin), set_power_state, FALLING);
     Serial.begin(115200);
     Serial.println("Power Monitoring Hub started");
     
