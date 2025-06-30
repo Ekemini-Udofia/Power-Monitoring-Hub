@@ -13,3 +13,5 @@ src/capture_portal.html
 .vscode/extensions.json
 .vscode
 .vscode/
+.pio/
+.vscode/
