@@ -91,5 +91,10 @@ void Initialize_and_connect() // Function 1
 
 
 }
-
+bool is_internet_connected()
+{
+  bool is_internet = false;
+  // Check if there's internet
+  return is_internet;
+}
 #endif
