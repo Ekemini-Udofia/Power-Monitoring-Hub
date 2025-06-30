@@ -39,6 +39,7 @@
 #include "config.h"
 #include "web_server.hpp"
 #include "capt_portal_connect.hpp"
+#include "time_sync.hpp"
 
 
 void flash_nvs() // call this when the nvs flash is full
@@ -59,15 +60,17 @@ void log_power_data(power_details& details)
 
 const char* get_time()
 {
-  const char* current_time;
+  unsigned long uptime = (millis() *  1000);  
+  long current_time;
+  current_time = internet_time();
   // Implement getting the exact time with millis() here
-  return current_time;
+  return ;
 }
 
 void IRAM_ATTR set_power_state()
 {
   power_details details;
-  is_power = ~is_power & 1; // change it to its Opposite state
+  is_power = !is_power; // change it to its Opposite state
   // add logic to stamp the time and then move that time
   if(is_power){
     details.state = "NEPA On";
