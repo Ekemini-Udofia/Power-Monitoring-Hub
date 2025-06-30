@@ -65,8 +65,8 @@ void Initialize_and_connect() // Function 1
       }
       else
       {
-        Serial.println("Failed to initialize and connect.\n Restarting device...");
-        ESP.restart();
+        Serial.println("Failed to initialize and connect.\nEntering deep sleep mode to save power...");
+        //enter deep sleep
       }
     }
   }
