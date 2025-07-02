@@ -46,8 +46,7 @@ void Initialize_and_connect() // Function 1
       is_cr_saved.putString("ssid", network_ssid);
       is_cr_saved.putString("password", network_password);
       */
-
-
+                                   
       //continue to power logging
      
     }

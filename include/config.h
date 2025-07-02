@@ -2,6 +2,7 @@
 #define config_file
 
 #define relay_pin 14
+#define relay_pin_2 26
 #define indicator_led 2 
 #define config_touch_0 4  
 
