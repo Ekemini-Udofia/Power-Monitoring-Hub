@@ -78,6 +78,7 @@ void setup()
 {
   // Initializations
   pinMode(RELAY_PIN, INPUT_PULLUP);
+  pinMode(CONFIG_TOUCH_0, INPUT_PULLDOWN);
   attachInterrupt(digitalPinToInterrupt(RELAY_PIN), set_power_state, CHANGE);
   attachInterrupt(digitalPinToInterrupt(CONFIG_TOUCH_0), CONFIG, RISING);
 
