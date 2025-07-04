@@ -10,20 +10,15 @@
 bool connect_to_network() // Function 3
 {
   bool connected = false;
+  const unsigned startAttemptTime = millis();
+  const unsigned long timeout = 10000; // 10 seconds
   WiFi.mode(WIFI_STA);
   WiFi.begin(network_ssid.c_str(), network_password.c_str());
-  Serial.println("Connecting to WiFi..."); //for my debugging - delete later
-  delay(10000);
-  if(WiFi.status() == WL_CONNECTED)
-  {
-    connected = true;
-  }
-  else{
-    connected = false;
-  }
+  Serial.println("Connecting to WiFi"); // Debug
+  connected = (WiFi.waitForConnectResult() == WL_CONNECTED) ? true : false;
   return connected;
 }
-void Initialize_and_connect() // Function 1
+void Initialize_and_connect()
 {
   bool credentials_saved;
   Preferences is_cr_saved;
@@ -93,7 +88,11 @@ void Initialize_and_connect() // Function 1
 bool is_internet_connected()
 {
   bool is_internet = false;
-  // Check if there's internet
+  WiFiClient internet;
+  if(internet.connect("google.com", 80))
+  {
+    is_internet = true;
+  }
   return is_internet;
 }
 #endif

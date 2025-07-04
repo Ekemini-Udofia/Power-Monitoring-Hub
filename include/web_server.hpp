@@ -53,7 +53,7 @@ bool connect_thru_captive_portal() // Function 2
   //Captive portal created - Yes
   //Also scan for available networks and send it to client 
   WiFi.mode(WIFI_AP_STA);
-  #define max_num_net 10
+  constexpr int max_num_net = 10;
   std::string network_list[max_num_net];
   int num_nets = WiFi.scanNetworks();
   if (num_nets == 0) {
