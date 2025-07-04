@@ -1,5 +1,5 @@
-#ifndef time_sync
-#define time_sync
+#ifndef TIME_SYNC
+#define TIME_SYNC
 
 #include "time.h"
 #include "capt_portal_connect.hpp"

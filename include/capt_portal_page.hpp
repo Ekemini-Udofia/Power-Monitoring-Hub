@@ -1,5 +1,5 @@
-#ifndef capt_port_page
-#define capt_port_page
+#ifndef CAPT_PORTAL_PAGE
+#define CAPT_PORTAL_PAGE
 
 //capture portal page
 

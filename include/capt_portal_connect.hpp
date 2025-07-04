@@ -1,5 +1,5 @@
-#ifndef cpt_port_connect
-#define cpt_port_connect
+#ifndef CAPT_PORTAL_CONNECT
+#define CAPT_PORTAL_CONNECT
 
 // Inbuilt libs
 #include <preferences.h>

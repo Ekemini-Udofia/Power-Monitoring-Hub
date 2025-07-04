@@ -91,8 +91,8 @@ void IRAM_ATTR set_power_state()
 void setup()
 {
   // Initializations
-  pinMode(relay_pin, INPUT_PULLUP);
-  attachInterrupt(digitalPinToInterrupt(relay_pin), set_power_state, CHANGE);
+  pinMode(RELAY_PIN, INPUT_PULLUP);
+  attachInterrupt(digitalPinToInterrupt(RELAY_PIN), set_power_state, CHANGE);
   Serial.begin(115200);
 
   Serial.println("Power Monitoring Hub started");
@@ -100,7 +100,7 @@ void setup()
   Initialize_and_connect();
   
   // Check if theres nepa then enter eep sleep mode
-  if (digitalRead(relay_pin) == LOW) {
+  if (digitalRead(RELAY_PIN) == LOW) {
     Serial.println("No power. Sleeping...");
     delay(2000);
     esp_sleep_enable_ext0_wakeup(GPIO_NUM_1, 1);

@@ -1,10 +1,10 @@
-#ifndef config_file
-#define config_file
+#ifndef CONFIG_FILE
+#define CONFIG_FILE
 
-#define relay_pin 14
-#define relay_pin_2 26
-#define indicator_led 2 
-#define config_touch_0 4  
+#define RELAY_PIN 14
+#define RELAY_PIN_2 26
+#define INDICATOR_LED 2 
+#define CONFIG_TOUCH_0 4  
 
 
 const char* default_ssid = "Power Hub";

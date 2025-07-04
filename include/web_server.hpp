@@ -1,5 +1,5 @@
-#ifndef web_server
-#define web_server
+#ifndef WEB_SERVER
+#define WEB_SERVER
 
 #include <WiFi.h>
 #include <DNSServer.h>
