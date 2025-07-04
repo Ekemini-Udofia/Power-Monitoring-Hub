@@ -30,7 +30,6 @@
 
 
 // Include libraries
-#include <Arduino.h>
 #include <nvs_flash.h>
 // #include <Arduino_FreeRTOS.h>
 
@@ -48,25 +47,12 @@ void flash_nvs() // call this when the nvs flash is full
   nvs_flash_init();
 }
 
-bool is_power = false; // No nepa ny deault
-
 void save_log(power_details& details)
 {
   // put detail->time inside preferences?
   // get struct power details and move it to sd card? or just save it in preferences
     // log the power state to a file or database
     // this can be done using LittleFS or SPIFFS for local storage
-}
-
-time_t log_time_data() {
-    time_t now = time(nullptr);
-    struct tm* timeinfo = localtime(&now);
-    char buffer[64];
-    strftime(buffer, sizeof(buffer), "%Y-%m-%d %H:%M:%S", timeinfo);
-    Serial.printf("State changed at: %s\n", buffer);
-    time_t power_time = buffer[64];
-    return power_time;
-
 }
 
 void IRAM_ATTR set_power_state()
@@ -76,10 +62,10 @@ void IRAM_ATTR set_power_state()
   // add logic to stamp the time and then move that time
   if(is_power){
     details.state = "NEPA On";
-    details.time = log_time_data();
+    details.time = get_time();
   }else{
     details.state = "NEPA Off";
-    details.time = log_time_data();
+    details.time = get_time();
   }
   save_log(details);  
 }
