@@ -79,6 +79,8 @@ void setup()
   // Initializations
   pinMode(RELAY_PIN, INPUT_PULLUP);
   attachInterrupt(digitalPinToInterrupt(RELAY_PIN), set_power_state, CHANGE);
+  attachInterrupt(digitalPinToInterrupt(CONFIG_TOUCH_0), CONFIG, RISING);
+
   Serial.begin(115200);
 
   Serial.println("Power Monitoring Hub started");

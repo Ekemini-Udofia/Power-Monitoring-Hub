@@ -46,8 +46,11 @@ class captive_request_handler : public AsyncWebHandler
         }
 };
 
-
-bool connect_thru_captive_portal() // Function 2
+void CONFIG()
+{
+  connect_thru_captive_portal();
+}
+bool connect_thru_captive_portal() 
 {
   bool connected = false;
   //Captive portal created - Yes
