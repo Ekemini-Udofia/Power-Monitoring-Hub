@@ -2,6 +2,7 @@
 #define CAPT_PORTAL_PAGE
 
 //capture portal page
+#include <config.h>
 
 const char index_html[] PROGMEM = R"rawliteral(
   <!DOCTYPE html>

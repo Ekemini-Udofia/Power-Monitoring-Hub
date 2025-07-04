@@ -5,6 +5,7 @@
 #define RELAY_PIN_2 26
 #define INDICATOR_LED 2 
 #define CONFIG_TOUCH_0 4  
+#include <Arduino.h>
 
 bool is_power = false; // No nepa ny deault
 
