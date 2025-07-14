@@ -28,8 +28,6 @@ void scan_and_update_networks() {
     }
 }
 
-
-
 // captive handler class      
 class captive_request_handler : public AsyncWebHandler
 {
@@ -45,7 +43,6 @@ class captive_request_handler : public AsyncWebHandler
             request->send(200, "text/html", index_html);
         }
 };
-
 
 bool connect_thru_captive_portal() 
 {
@@ -69,9 +66,7 @@ bool connect_thru_captive_portal()
 
     //send the array to the web page 
 
-
-
-  //send the list of available networks to the client
+    //send the list of available networks to the client
 
   // serve index_html page
   WiFi.softAP(default_ssid, default_password);
