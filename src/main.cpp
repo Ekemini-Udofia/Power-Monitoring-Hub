@@ -27,8 +27,6 @@
         Predictive API Hook (Optional)
         Periodically send logs to Gemini API (or similar) and display predictions on the page.
 */
-
-
 // Include libraries
 // #include <Arduino_FreeRTOS.h>
 
@@ -39,26 +37,20 @@
 #include "capt_portal_connect.hpp"
 #include "save_send_module.hpp"
 
-
-
-
-
-
-
 void setup()
 {
   // Initializations
   pinMode(RELAY_PIN, INPUT_PULLUP);
   pinMode(CONFIG_TOUCH_0, INPUT_PULLDOWN);
-  attachInterrupt(digitalPinToInterrupt(RELAY_PIN), set_power_state, CHANGE);
+  attachInterrupt(digitalPinToInterrupt(RELAY_PIN), setPowerState, CHANGE);
   attachInterrupt(digitalPinToInterrupt(CONFIG_TOUCH_0), CONFIG, RISING);
-
   Serial.begin(115200);
-
   Serial.println("Power Monitoring Hub started");
-
   Initialize_and_connect();
-  
+}
+
+void loop()
+{
   // Check if theres nepa then enter eep sleep mode
   if (digitalRead(RELAY_PIN) == LOW) {
     Serial.println("No power. Sleeping...");
@@ -66,11 +58,4 @@ void setup()
     esp_sleep_enable_ext0_wakeup(GPIO_NUM_1, 1);
     esp_deep_sleep_start();
   }
-    // WiFi.softAP(default_ssid, default_password);
-
-}
-
-void loop()
-{
-    
 }

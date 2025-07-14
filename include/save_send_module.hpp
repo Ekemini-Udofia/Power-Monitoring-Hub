@@ -8,16 +8,20 @@
 
 void save_log(power_details& details)
 {
-  // put detail->time inside preferences?
-  // get struct power details and move it to sd card? or just save it in preferences
-    // log the power state to a file or database
-    // this can be done using LittleFS or SPIFFS for local storage
+  // put detail->time inside preferences? - Later
 
+  String time = details.time, state = details.state;
+  WiFiClient tsClient;
+  ThingSpeak.begin(tsClient);
+  ThingSpeak.setField(1, time);
+  ThingSpeak.setField(2, state);
 
-
+  int statusCode = ThingSpeak.writeFields(myChannelNumber, SECRET_READ_API_KEY);
+  String status = (statusCode == 200) ? "Channel Update Successful!" : "Couldn't Update Channel!";
+  Serial.println(status);
 }
 
-void IRAM_ATTR set_power_state()
+void IRAM_ATTR setPowerState()
 {
   power_details details;
   is_power = !is_power; // change it to its Opposite state
