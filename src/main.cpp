@@ -30,7 +30,6 @@
 
 
 // Include libraries
-#include <nvs_flash.h>
 // #include <Arduino_FreeRTOS.h>
 
 // My personally defined headers
@@ -38,37 +37,9 @@
 #include "config.h"
 #include "web_server.hpp"
 #include "capt_portal_connect.hpp"
-#include "time_sync.hpp"
+#include "save_send_module.hpp"
 
 
-void flash_nvs() // call this when the nvs flash is full
-{
-  nvs_flash_erase();
-  nvs_flash_init();
-}
-
-void save_log(power_details& details)
-{
-  // put detail->time inside preferences?
-  // get struct power details and move it to sd card? or just save it in preferences
-    // log the power state to a file or database
-    // this can be done using LittleFS or SPIFFS for local storage
-}
-
-void IRAM_ATTR set_power_state()
-{
-  power_details details;
-  is_power = !is_power; // change it to its Opposite state
-  // add logic to stamp the time and then move that time
-  if(is_power){
-    details.state = "NEPA On";
-    details.time = get_time();
-  }else{
-    details.state = "NEPA Off";
-    details.time = get_time();
-  }
-  save_log(details);  
-}
 
 
 
